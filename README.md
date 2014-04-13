@@ -1,7 +1,7 @@
 Pong
 ====
 
-Java JX based Pong made to run on a Raspberry Pi. It was developed for the Hunderdon County Robostorm Robotics Club's display at the fair. It is meant to be run on a 800x600 screen, but will work on any size.
+Java FX based Pong made to run on a Raspberry Pi. It was developed for the Hunderdon County Robostorm Robotics Club's display at the fair. It is meant to be run on a 800x600 screen, but will work on any size.
 
 Installation
 ====
