@@ -161,7 +161,8 @@ public class Game extends AnimationTimer {
                     }else{
                         changeX = 1;
                     }
-                    changeY = (Math.random() - 0.5);
+                    
+                    changeY = (Math.random()*.24 - 0.12);
                     ballX = (int) (Pong.scene.getWidth() / 2);
                     ballY = rightY;
                     leftY = rightY;
