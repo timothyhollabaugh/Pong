@@ -66,7 +66,9 @@ public class Game extends AnimationTimer {
     List<Node> menuNodes = new ArrayList<>();
     List<Node> runningNodes = new ArrayList<>();
     List<Node> winNodes = new ArrayList<>();
-
+    
+    SoundPlayer soundplayer = new SoundPlayer();
+    
     public void init() {
         menuNodes.add(playerl);
         menuNodes.add(playerr);
@@ -149,20 +151,20 @@ public class Game extends AnimationTimer {
                     setVisibility(menuNodes, false);
 
                     rightY = (int) (Pong.scene.getHeight() / 2);
-                    if(players == 2){
+                    if (players == 2) {
                         double rand = Math.random();
-                        if(rand < .5){
+                        if (rand < .5) {
                             changeX = -1;
                         }
-                        
-                        if(rand >= .5){
+
+                        if (rand >= .5) {
                             changeX = 1;
                         }
-                    }else{
+                    } else {
                         changeX = 1;
                     }
-                    
-                    changeY = (Math.random()*.24 - 0.12);
+
+                    changeY = (Math.random() * .24 - 0.12);
                     ballX = (int) (Pong.scene.getWidth() / 2);
                     ballY = rightY;
                     leftY = rightY;
@@ -228,6 +230,7 @@ public class Game extends AnimationTimer {
                 // Check if ball is at left paddle, bounce if within paddle, end game if not
                 if (ballX <= 40) {
                     if (ballY >= leftY - (paddleHeight / 2 + ballHeight / 2) && ballY <= leftY + (paddleHeight / 2 + ballHeight / 2)) {
+                        playClip();
                         changeX = (Math.abs(changeX));
                         changeY = -((double) leftY - (double) ballY) / ((double) paddleHeight / 2);
                     } else {
@@ -235,11 +238,10 @@ public class Game extends AnimationTimer {
                         state = GameState.WINRIGHT;
                     }
 
-                } else
-
-                // Check if ball is at right paddle, bounce if within paddle, end game if not
+                } else // Check if ball is at right paddle, bounce if within paddle, end game if not
                 if (ballX >= Pong.scene.getWidth() - 30) {
                     if (ballY >= rightY - (paddleHeight / 2 + ballHeight / 2) && ballY <= rightY + (paddleHeight / 2 + ballHeight / 2)) {
+                        playClip();
                         changeX = -(Math.abs(changeX));
                         changeY = -((double) rightY - (double) ballY) / ((double) paddleHeight / 2);
                     } else {
@@ -247,15 +249,15 @@ public class Game extends AnimationTimer {
                         System.out.println("Left Wins");
                         state = GameState.WINLEFT;
                     }
-                } else
-
-                // Make ball bounce from top
+                } else // Make ball bounce from top
                 if (ballY <= ballHeight / 2) {
+                    playClip();
                     changeY = (Math.abs(changeY));
                 }
 
                 // Make ball bounce from bottom
                 if (ballY >= Pong.scene.getHeight() - ballHeight / 2) {
+                    playClip();
                     changeY = -(Math.abs(changeY));
                 }
 
@@ -373,6 +375,11 @@ public class Game extends AnimationTimer {
         text.setX(tx);
         text.setY(ty);
         return text;
+    }
+
+    private void playClip() {
+        System.out.println("Beeping");
+        (new Thread(new SoundPlayer())).start();
     }
 
 }
