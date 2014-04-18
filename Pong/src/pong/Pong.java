@@ -49,15 +49,6 @@ public class Pong extends Application {
         
     }
     
-    public static void win(String side){
-	
-    }
-    
-    public static void clearScreen(){
-	root.getChildren().removeAll();
-	System.out.println("Clearing Screen");
-    }
-    
     /**
      * @param args the command line arguments
      */
