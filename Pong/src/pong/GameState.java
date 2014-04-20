@@ -12,6 +12,7 @@ package pong;
  */
 public enum GameState {
     MENU,
+    STARTING,
     RUNNING,
     WINLEFT,
     WINRIGHT

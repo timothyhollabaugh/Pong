@@ -24,17 +24,17 @@ import listeners.KeyListener;
  @author rich
  */
 public class Game extends AnimationTimer {
-    
+
     private final static double TOP_OFFSET = 40;
     private final static double BOTTOM_OFFSET = 40;
     private final static double RIGHT_OFFSET = 40;
     private final static double LEFT_OFFSET = 40;
-    
+
     private static double TOP;
     private static double BOTTOM;
     private static double RIGHT;
     private static double LEFT;
-    
+
     private double changeX;
     private double changeY;
     private final double ballSpeed = 8;
@@ -47,7 +47,13 @@ public class Game extends AnimationTimer {
     private boolean started = false;
     private boolean firstMenu = true;
     private boolean firstWin = true;
+    private boolean firstStart = true;
+    private boolean firstOne = true;
+    private boolean firstTwo = true;
+    private boolean firstThree = true;
+
     private long winTime;
+    private long startTime;
     private final double winTimeout = 1500000000.0;
     private int menuSelection = 1;
 
@@ -76,16 +82,18 @@ public class Game extends AnimationTimer {
     Text win = new Text();
 
     List<Node> menuNodes = new ArrayList<>();
+    List<Node> startingNodes = new ArrayList<>();
     List<Node> runningNodes = new ArrayList<>();
     List<Node> winNodes = new ArrayList<>();
-    
+
     SoundPlayer soundplayer = new SoundPlayer();
-    
+
     public void init() {
         menuNodes.add(playerl);
         menuNodes.add(playerr);
         menuNodes.add(selector);
         menuNodes.add(title);
+
         runningNodes.add(leftPaddle);
         runningNodes.add(rightPaddle);
         runningNodes.add(ball);
@@ -110,11 +118,14 @@ public class Game extends AnimationTimer {
                 if (firstMenu) {
                     System.out.println("Menu Activated");
 
+                    playClip();
+
                     title = formatText(0, -50, 100, "Pong", title);
                     playerl = formatText(0, 50, 20, "1 Player", playerl);
                     playerr = formatText(0, 70, 20, "2 Player", playerr);
 
                     setVisibility(runningNodes, false);
+                    setVisibility(startingNodes, false);
                     setVisibility(winNodes, false);
                     setVisibility(menuNodes, true);
 
@@ -135,7 +146,7 @@ public class Game extends AnimationTimer {
                 if (keyboard.isDown("Enter")) {
                     players = menuSelection;
                     playClip();
-                    state = GameState.RUNNING;
+                    state = GameState.STARTING;
                     firstMenu = true;
                 }
 
@@ -153,10 +164,9 @@ public class Game extends AnimationTimer {
 
                 return;
 
-            case RUNNING:
+            case STARTING:
+                if (firstStart) {
 
-                if (!started) {
-                    
                     TOP = TOP_OFFSET;
                     BOTTOM = Pong.scene.getHeight() - BOTTOM_OFFSET;
                     RIGHT = Pong.scene.getWidth() - RIGHT_OFFSET;
@@ -169,12 +179,8 @@ public class Game extends AnimationTimer {
                     System.out.println("Virtual BOTTOM: " + BOTTOM);
                     System.out.println("Virtual RIGHT: " + RIGHT);
                     System.out.println("Virtual LEFT: " + LEFT);
-                    
-                    System.out.println("Game Started With " + players + " Players");
 
-                    setVisibility(runningNodes, true);
-                    setVisibility(winNodes, false);
-                    setVisibility(menuNodes, false);
+                    System.out.println("Game Starting With " + players + " Players");
 
                     rightY = (int) (Pong.scene.getHeight() / 2);
                     leftY = rightY;
@@ -182,7 +188,7 @@ public class Game extends AnimationTimer {
                     leftX = (int) (LEFT + 25);
                     ballX = (int) (Pong.scene.getWidth() / 2);
                     ballY = rightY;
-                    
+
                     if (players == 2) {
                         double rand = Math.random();
                         if (rand < .5) {
@@ -195,7 +201,7 @@ public class Game extends AnimationTimer {
                     } else {
                         changeX = 1;
                     }
-                    
+
                     double rand = Math.random();
                     if (rand < .5) {
                         changeY = -0.15;
@@ -204,8 +210,63 @@ public class Game extends AnimationTimer {
                     if (rand >= .5) {
                         changeY = 0.15;
                     }
-                    
-                    
+
+                    setVisibility(runningNodes, true);
+                    setVisibility(startingNodes, true);
+                    setVisibility(winNodes, false);
+                    setVisibility(menuNodes, false);
+
+                    startTime = now;
+                    firstStart = false;
+
+                }
+
+                if (now - startTime <= 1000000000.0) {
+                    if (firstOne) {
+                        playClip();
+                        System.out.println("Game starting in: 3");
+                        firstOne = false;
+                    }
+                } else if (now - startTime <= 2000000000.0) {
+                    if (firstTwo) {
+                        playClip();
+                        System.out.println("Game starting in: 2");
+                        firstTwo = false;
+                    }
+                } else if (now - startTime <= 3000000000.0) {
+                    if (firstThree) {
+                        playClip();
+                        System.out.println("Game starting in: 1");
+                        firstThree = false;
+                    }
+                } else {
+                    playClip();
+                    state = GameState.RUNNING;
+                    firstStart = true;
+                    firstOne = true;
+                    firstTwo = true;
+                    firstThree = true;
+                }
+
+                //Set position of the ball onscreen
+                ball.setX(ballX - 5);
+                ball.setY(ballY - 5);
+
+                //Set left paddle position onscreen
+                leftPaddle.setX(leftX);
+                leftPaddle.setY(leftY - paddleHeight / 2);
+
+                //Set right paddle position onscreen
+                rightPaddle.setX(rightX);
+                rightPaddle.setY(rightY - paddleHeight / 2);
+
+                return;
+
+            case RUNNING:
+
+                if (!started) {
+
+                    setVisibility(startingNodes, false);
                     started = true;
                 }
 
@@ -287,7 +348,7 @@ public class Game extends AnimationTimer {
                         state = GameState.WINLEFT;
                     }
                 }
-                
+
                 // Make ball bounce from top
                 if (ballY <= TOP - (ballHeight / 2)) {
                     playClip();
@@ -331,19 +392,18 @@ public class Game extends AnimationTimer {
                 //Set right paddle position onscreen
                 rightPaddle.setX(rightX);
                 rightPaddle.setY(rightY - paddleHeight / 2);
-                
-                System.out.println("Setting ball to: " + ballX + ", " + ballY);
-                System.out.println("Setting left to: " + leftX + ", " + leftY);
-                System.out.println("Setting right to: " + rightX + ", " + rightY);
-                
-                //System.out.println(changeX + ", " + changeY);
 
+                //System.out.println("Setting ball to: " + ballX + ", " + ballY);
+                //System.out.println("Setting left to: " + leftX + ", " + leftY);
+                //System.out.println("Setting right to: " + rightX + ", " + rightY);
+                //System.out.println(changeX + ", " + changeY);
                 return;
 
             case WINLEFT:
                 started = false;
                 if (firstWin) {
                     System.out.println("Win Screen Activated, Left Won");
+                    //playClip();
 
                     if (players == 1) {
                         formatText(0, 0, 100, "You Win!", win);
@@ -354,6 +414,7 @@ public class Game extends AnimationTimer {
                     }
 
                     setVisibility(runningNodes, false);
+                    setVisibility(startingNodes, false);
                     setVisibility(winNodes, true);
                     setVisibility(menuNodes, false);
 
@@ -373,6 +434,7 @@ public class Game extends AnimationTimer {
                 started = false;
                 if (firstWin) {
                     System.out.println("Win Screen Activated, Right Won");
+                    //playClip();
 
                     if (players == 1) {
                         formatText(0, 0, 100, "You Lose", win);
@@ -383,6 +445,7 @@ public class Game extends AnimationTimer {
                     }
 
                     setVisibility(runningNodes, false);
+                    setVisibility(startingNodes, false);
                     setVisibility(winNodes, true);
                     setVisibility(menuNodes, false);
 
