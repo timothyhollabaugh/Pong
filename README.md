@@ -21,4 +21,4 @@ No Java 8 required, simply download and run with java.
 Usage
 ====
 
-On a Pi, run with /opt/[jdk_version_here]/bin/java -jar Pong.jar, replacing [jdk_version_here] with the java version eg. jdk1.8.0_20. On a PC, use java -jar Pong.jar. Be warned, it is fullscreen!
+On a Pi, run with sudo /opt/[jdk_version_here]/bin/java -classpath .:classes:/opt/pi4j/lib/'*' pong.Pong, replacing [jdk_version_here] with the java version eg. jdk1.8.0_20. On a PC, use java -jar Pong.jar. Be warned, it is fullscreen!
