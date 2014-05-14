@@ -33,6 +33,7 @@ public class Pong extends Application {
     @Override
     public void start(Stage primaryStage) throws InterruptedException {
         
+        Printer.println("==========Pong Starting==========");
 	//Set up root pane
 	root.setCursor(Cursor.NONE);
         game.init();
@@ -40,12 +41,12 @@ public class Pong extends Application {
         scene.setOnKeyPressed(new KeyListener());
         scene.setOnKeyReleased(new KeyListener());
 	scene.setCursor(Cursor.NONE);
-        //game.beep = new AudioClip("http://www.soundjay.com/button/beep-02.mp3");
         primaryStage.setScene(scene); 
 	primaryStage.setFullScreenExitHint("");
         primaryStage.setFullScreen(true);
         game.start();
         primaryStage.show();
+        Printer.println("==========Pong  Started==========");
         
     }
     

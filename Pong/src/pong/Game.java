@@ -14,10 +14,10 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import listeners.KeyListener;
+import listeners.Input;
+import listeners.PinListener;
 
 /**
 
@@ -69,12 +69,13 @@ public class Game extends AnimationTimer {
 
     int players = 1;
 
-    KeyListener keyboard = new KeyListener();
+    PinListener keyboard = new PinListener();
     Rectangle leftPaddle = new Rectangle(paddleWidth, paddleHeight, Color.WHITE);
     Rectangle rightPaddle = new Rectangle(paddleWidth, paddleHeight, Color.WHITE);
     Rectangle ball = new Rectangle(ballWidth, ballHeight, Color.WHITE);
 
     Text title = new Text();
+    Text name = new Text();
     Text playerl = new Text();
     Text playerr = new Text();
     Rectangle selector = new Rectangle(10, 10, Color.WHITE);
@@ -87,12 +88,14 @@ public class Game extends AnimationTimer {
     List<Node> winNodes = new ArrayList<>();
 
     SoundPlayer soundplayer = new SoundPlayer();
+    
 
     public void init() {
         menuNodes.add(playerl);
         menuNodes.add(playerr);
         menuNodes.add(selector);
         menuNodes.add(title);
+        menuNodes.add(name);
 
         runningNodes.add(leftPaddle);
         runningNodes.add(rightPaddle);
@@ -102,6 +105,11 @@ public class Game extends AnimationTimer {
         Pong.root.getChildren().addAll(menuNodes);
         Pong.root.getChildren().addAll(runningNodes);
         Pong.root.getChildren().addAll(winNodes);
+        
+        System.out.println("Initing PinLister");
+        PinListener.init();
+        
+        
     }
 
     @Override
@@ -116,11 +124,12 @@ public class Game extends AnimationTimer {
 
             case MENU:
                 if (firstMenu) {
-                    System.out.println("Menu Activated");
+                    Printer.println("Menu Activated");
 
                     playClip();
 
-                    title = formatText(0, -50, 100, "Pong", title);
+                    title = formatText(0, -100, 100, "Pong", title);
+                    name = formatText(0, -20, 30, "Timothy Hollabaugh", name);
                     playerl = formatText(0, 50, 20, "1 Player", playerl);
                     playerr = formatText(0, 70, 20, "2 Player", playerr);
 
@@ -132,18 +141,18 @@ public class Game extends AnimationTimer {
                     firstMenu = false;
                 }
 
-                if (keyboard.isDown("Up")) {
+                if (keyboard.isDown(Input.L_UP)) {
                     menuSelection = 1;
                     System.out.println("Setting Players to " + menuSelection);
 
                 }
 
-                if (keyboard.isDown("Down")) {
+                if (keyboard.isDown(Input.L_DOWN)) {
                     menuSelection = 2;
                     System.out.println("Setting Players to " + menuSelection);
                 }
 
-                if (keyboard.isDown("Enter")) {
+                if (keyboard.isDown(Input.L_BUTTON)) {
                     players = menuSelection;
                     playClip();
                     state = GameState.STARTING;
@@ -224,19 +233,19 @@ public class Game extends AnimationTimer {
                 if (now - startTime <= 1000000000.0) {
                     if (firstOne) {
                         playClip();
-                        System.out.println("Game starting in: 3");
+                        Printer.println("Game starting in: 3");
                         firstOne = false;
                     }
                 } else if (now - startTime <= 2000000000.0) {
                     if (firstTwo) {
                         playClip();
-                        System.out.println("Game starting in: 2");
+                        Printer.println("Game starting in: 2");
                         firstTwo = false;
                     }
                 } else if (now - startTime <= 3000000000.0) {
                     if (firstThree) {
                         playClip();
-                        System.out.println("Game starting in: 1");
+                        Printer.println("Game starting in: 1");
                         firstThree = false;
                     }
                 } else {
@@ -273,11 +282,11 @@ public class Game extends AnimationTimer {
                 // Set posistion of paddles
                 // 1 Player Input
                 if (players == 1) {
-                    if (keyboard.isDown("Up")) {
+                    if (keyboard.isDown(Input.L_UP)) {
                         leftY -= paddleSpeed;
                     }
 
-                    if (keyboard.isDown("Down")) {
+                    if (keyboard.isDown(Input.L_DOWN)) {
                         leftY += paddleSpeed;
                     }
 
@@ -304,19 +313,19 @@ public class Game extends AnimationTimer {
 
                 // 2 Player Input
                 if (players == 2) {
-                    if (keyboard.isDown("Up")) {
+                    if (keyboard.isDown(Input.L_UP)) {
                         leftY -= paddleSpeed;
                     }
 
-                    if (keyboard.isDown("Down")) {
+                    if (keyboard.isDown(Input.L_DOWN)) {
                         leftY += paddleSpeed;
                     }
 
-                    if (keyboard.isDown("W")) {
+                    if (keyboard.isDown(Input.R_UP)) {
                         rightY -= paddleSpeed;
                     }
 
-                    if (keyboard.isDown("S")) {
+                    if (keyboard.isDown(Input.R_DOWN)) {
                         rightY += paddleSpeed;
                     }
                 }
@@ -402,7 +411,7 @@ public class Game extends AnimationTimer {
             case WINLEFT:
                 started = false;
                 if (firstWin) {
-                    System.out.println("Win Screen Activated, Left Won");
+                    Printer.println("Win Screen Activated, Left Won");
                     //playClip();
 
                     if (players == 1) {
@@ -433,7 +442,7 @@ public class Game extends AnimationTimer {
             case WINRIGHT:
                 started = false;
                 if (firstWin) {
-                    System.out.println("Win Screen Activated, Right Won");
+                    Printer.println("Win Screen Activated, Right Won");
                     //playClip();
 
                     if (players == 1) {
@@ -472,19 +481,19 @@ public class Game extends AnimationTimer {
     }
 
     Text formatText(int x, int y, int charHeight, String s, Text text) {
-        double tx = (Pong.scene.getWidth() / 2 + x) - (s.length() / 2) * ((charHeight / 3) * 2);
+        double tx = (Pong.scene.getWidth() / 2 + x) - (s.length() / 2) * ((charHeight / 2));
         double ty = (Pong.scene.getHeight() / 2 + y) + (charHeight / 2);
         text.setText(s);
         text.setFill(Color.WHITE);
         text.setTextAlignment(TextAlignment.CENTER);
-        text.setFont(Font.font("Courier New", FontWeight.THIN, charHeight));
+        text.setFont(Font.loadFont("file:pong/UbuntuMono-R.ttf", charHeight));
         text.setX(tx);
         text.setY(ty);
         return text;
     }
 
     private void playClip() {
-        System.out.println("Beeping");
+        Printer.println("Beeping");
         (new Thread(new SoundPlayer())).start();
     }
 

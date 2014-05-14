@@ -18,8 +18,6 @@ import javafx.scene.input.KeyEvent;
 public class KeyListener implements EventHandler<KeyEvent> {
 
     public static Map<String, Boolean> keys = new HashMap<>();
-    public static Map<String, Boolean> oldKeys = new HashMap<>();
-
     @Override
     public void handle(KeyEvent event) {
         //System.out.println(event.getEventType() + " " + event.getCode().getName());
@@ -52,11 +50,7 @@ public class KeyListener implements EventHandler<KeyEvent> {
 
     public boolean isDown(String key) {
         if (KeyListener.keys.containsKey(key)) {
-            if (KeyListener.keys.get(key)) {
-                return true;
-            } else {
-                return false;
-            }
+            return KeyListener.keys.get(key);
         } else {
             return false;
         }

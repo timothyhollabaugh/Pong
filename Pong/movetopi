@@ -1,2 +1,2 @@
 cd dist
-scp Pong.jar pi@192.168.5.34:/home/pi
+scp PiPong.jar pi@192.168.5.117:/home/pi

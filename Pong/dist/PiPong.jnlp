@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="PiPong.jnlp">
+  <information>
+    <title>PiPong</title>
+    <vendor>rich</vendor>
+    <description>null</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <jfx:javafx-runtime version="2.2+" href="http://javadl.sun.com/webapps/download/GetFile/javafx-latest/windows-i586/javafx2.jnlp"/>
+  </resources>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="PiPong.jar" size="77393" download="eager" />
+    <jar href="lib/pi4j-core.jar" size="170200" download="eager" />
+    <jar href="lib/pi4j-device.jar" size="96553" download="eager" />
+    <jar href="lib/pi4j-example.jar" size="64934" download="eager" />
+    <jar href="lib/pi4j-gpio-extension.jar" size="53402" download="eager" />
+    <jar href="lib/pi4j-service.jar" size="17356" download="eager" />
+  </resources>
+  <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="PiPong" >
+    <param name="requiredFXVersion" value="2.2+"/>
+  </applet-desc>
+  <jfx:javafx-desc  width="800" height="600" main-class="pong.Pong"  name="PiPong" />
+  <update check="always"/>
+</jnlp>
